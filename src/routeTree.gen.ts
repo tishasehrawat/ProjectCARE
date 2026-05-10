@@ -9,38 +9,135 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ContextRouteImport } from './routes/context'
+import { Route as CommunicateRouteImport } from './routes/communicate'
+import { Route as ComfortRouteImport } from './routes/comfort'
+import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PathwayContextRouteImport } from './routes/pathway.$context'
 
+const ContextRoute = ContextRouteImport.update({
+  id: '/context',
+  path: '/context',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunicateRoute = CommunicateRouteImport.update({
+  id: '/communicate',
+  path: '/communicate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComfortRoute = ComfortRouteImport.update({
+  id: '/comfort',
+  path: '/comfort',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckinRoute = CheckinRouteImport.update({
+  id: '/checkin',
+  path: '/checkin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PathwayContextRoute = PathwayContextRouteImport.update({
+  id: '/pathway/$context',
+  path: '/pathway/$context',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/comfort': typeof ComfortRoute
+  '/communicate': typeof CommunicateRoute
+  '/context': typeof ContextRoute
+  '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/comfort': typeof ComfortRoute
+  '/communicate': typeof CommunicateRoute
+  '/context': typeof ContextRoute
+  '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/comfort': typeof ComfortRoute
+  '/communicate': typeof CommunicateRoute
+  '/context': typeof ContextRoute
+  '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/checkin'
+    | '/comfort'
+    | '/communicate'
+    | '/context'
+    | '/pathway/$context'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/checkin'
+    | '/comfort'
+    | '/communicate'
+    | '/context'
+    | '/pathway/$context'
+  id:
+    | '__root__'
+    | '/'
+    | '/checkin'
+    | '/comfort'
+    | '/communicate'
+    | '/context'
+    | '/pathway/$context'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CheckinRoute: typeof CheckinRoute
+  ComfortRoute: typeof ComfortRoute
+  CommunicateRoute: typeof CommunicateRoute
+  ContextRoute: typeof ContextRoute
+  PathwayContextRoute: typeof PathwayContextRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/context': {
+      id: '/context'
+      path: '/context'
+      fullPath: '/context'
+      preLoaderRoute: typeof ContextRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/communicate': {
+      id: '/communicate'
+      path: '/communicate'
+      fullPath: '/communicate'
+      preLoaderRoute: typeof CommunicateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comfort': {
+      id: '/comfort'
+      path: '/comfort'
+      fullPath: '/comfort'
+      preLoaderRoute: typeof ComfortRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkin': {
+      id: '/checkin'
+      path: '/checkin'
+      fullPath: '/checkin'
+      preLoaderRoute: typeof CheckinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +145,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pathway/$context': {
+      id: '/pathway/$context'
+      path: '/pathway/$context'
+      fullPath: '/pathway/$context'
+      preLoaderRoute: typeof PathwayContextRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CheckinRoute: CheckinRoute,
+  ComfortRoute: ComfortRoute,
+  CommunicateRoute: CommunicateRoute,
+  ContextRoute: ContextRoute,
+  PathwayContextRoute: PathwayContextRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
