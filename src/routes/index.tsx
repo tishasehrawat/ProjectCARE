@@ -1,14 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppFooter, AppHeader } from "@/components/AppHeader";
+import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, HeartPulse, Map, Wind, MessageCircle } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import { ArrowRight, HeartPulse, Map, Wind, MessageCircle, NotebookPen, BookHeart } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CARE — Calm, clarity & comfort in hospital moments" },
+      { title: "Project CARE — Calm, clarity & comfort in hospital moments" },
       { name: "description", content: "A gentle in-hospital companion that helps patients and families navigate fear, uncertainty, and waiting with structured support." },
-      { property: "og:title", content: "CARE — Calm, clarity & comfort in hospital moments" },
+      { property: "og:title", content: "Project CARE — Calm, clarity & comfort in hospital moments" },
       { property: "og:description", content: "Capture fear. Clarify uncertainty. Create comfort." },
     ],
   }),
@@ -16,6 +18,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { t } = useI18n();
   return (
     <div className="min-h-screen">
       <AppHeader />
@@ -34,21 +37,19 @@ function Home() {
               When the hospital feels heavy, <span className="italic text-primary">breathe with us.</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-              CARE is a calm companion for patients and families during waiting,
-              diagnosis, surgery and the moments in between. Three steps:
-              capture fear, clarify what happens next, create comfort.
+              Project CARE is a calm companion for patients and families during waiting,
+              diagnosis, surgery and the moments in between. Three steps: capture fear,
+              clarify what happens next, create comfort.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="rounded-full px-7 shadow-soft">
-                <Link to="/checkin">Begin a check-in <ArrowRight className="h-4 w-4" /></Link>
+                <Link to="/checkin">{t("cta.begin")} <ArrowRight className="h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-full px-7">
-                <Link to="/context">Skip to what I need</Link>
+                <Link to="/context">{t("cta.skip")}</Link>
               </Button>
             </div>
-            <p className="mt-6 text-xs text-muted-foreground">
-              Not a medical tool. Not a diagnosis. A gentle hand to hold while you wait.
-            </p>
+            <p className="mt-6 max-w-xl text-xs text-muted-foreground">{t("disclaimer.long")}</p>
           </div>
 
           <div className="relative flex items-center justify-center">
@@ -73,57 +74,38 @@ function Home() {
           <h2 className="mt-3 text-3xl md:text-4xl">A simple path through a difficult moment.</h2>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
-          <StepCard
-            icon={<HeartPulse className="h-5 w-5" />}
-            step="01"
-            title="Capture fear"
-            text="A 30-second check-in to name what you are feeling, without judgement."
-            tone="calm"
-          />
-          <StepCard
-            icon={<Map className="h-5 w-5" />}
-            step="02"
-            title="Clarify uncertainty"
-            text="Stage-by-stage maps of what typically happens next in your situation."
-            tone="default"
-          />
-          <StepCard
-            icon={<Wind className="h-5 w-5" />}
-            step="03"
-            title="Create comfort"
-            text="Guided breathing, grounding and gentle scripts to steady your moment."
-            tone="warm"
-          />
+          <StepCard icon={<HeartPulse className="h-5 w-5" />} step="01" title="Capture fear" text="A 30-second check-in to name what you are feeling, without judgement." tone="calm" />
+          <StepCard icon={<Map className="h-5 w-5" />} step="02" title="Clarify uncertainty" text="Stage-by-stage maps of what typically happens next in your situation." tone="default" />
+          <StepCard icon={<Wind className="h-5 w-5" />} step="03" title="Create comfort" text="Guided breathing library, grounding and gentle scripts to steady your moment." tone="warm" />
         </div>
       </section>
 
       {/* Quick contexts */}
-      <section className="mx-auto max-w-5xl px-4 pb-20">
+      <section className="mx-auto max-w-5xl px-4 pb-16">
         <h2 className="mb-6 text-2xl md:text-3xl">Where are you right now?</h2>
         <div className="grid gap-3 sm:grid-cols-2">
-          <ContextLink emoji="🔬" title="Waiting for diagnosis" to="/pathway/diagnosis" />
-          <ContextLink emoji="🩺" title="Pre-operation waiting" to="/pathway/preop" />
-          <ContextLink emoji="💬" title="After a consultation" to="/pathway/postconsult" />
-          <ContextLink emoji="🤍" title="Family outside OT or ICU" to="/pathway/ot-icu" />
+          <ContextLink emoji="🗓️" title="Waiting for a consultation" to="/pathway/$context" params={{ context: "consultation" }} />
+          <ContextLink emoji="🔬" title="Waiting for a diagnosis" to="/pathway/$context" params={{ context: "diagnosis" }} />
+          <ContextLink emoji="🩸" title="Waiting for blood test results" to="/pathway/$context" params={{ context: "bloodtest" }} />
+          <ContextLink emoji="🖥️" title="Waiting for imaging" to="/pathway/$context" params={{ context: "imaging" }} />
+          <ContextLink emoji="🩺" title="Pre-operation waiting" to="/pathway/$context" params={{ context: "preop" }} />
+          <ContextLink emoji="🤍" title="Family outside the OT" to="/pathway/$context" params={{ context: "ot" }} />
+          <ContextLink emoji="💙" title="Family outside the ICU" to="/pathway/$context" params={{ context: "icu" }} />
+          <ContextLink emoji="🚪" title="Going through discharge" to="/pathway/$context" params={{ context: "discharge" }} />
         </div>
       </section>
 
-      {/* Communicate */}
-      <section className="mx-auto max-w-5xl px-4 pb-24">
-        <div className="rounded-3xl bg-gradient-warm p-8 shadow-soft md:p-12">
-          <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-xl">
-              <MessageCircle className="h-6 w-6 text-warm-foreground" />
-              <h3 className="mt-3 text-2xl">Not sure how to ask your doctor?</h3>
-              <p className="mt-2 text-warm-foreground/80">
-                We help you build respectful, clear questions so you leave the room feeling heard.
-              </p>
-            </div>
-            <Button asChild size="lg" variant="default" className="rounded-full">
-              <Link to="/communicate">Build my questions <ArrowRight className="h-4 w-4" /></Link>
-            </Button>
-          </div>
+      {/* Tools row */}
+      <section className="mx-auto max-w-5xl px-4 pb-16">
+        <div className="grid gap-4 md:grid-cols-3">
+          <ToolCard to="/communicate" icon={<MessageCircle className="h-5 w-5" />} title="Ask your doctor" text="Build clear, respectful questions by category." />
+          <ToolCard to="/notes" icon={<NotebookPen className="h-5 w-5" />} title="Consultation notes" text="Keep instructions, medicine names, follow-up dates." />
+          <ToolCard to="/journal" icon={<BookHeart className="h-5 w-5" />} title="Journal" text="Gentle prompts to name what you're feeling." />
         </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-4 pb-24">
+        <DisclaimerBanner variant="long" />
       </section>
 
       <AppFooter />
@@ -145,10 +127,14 @@ function StepCard({ icon, step, title, text, tone }: { icon: React.ReactNode; st
   );
 }
 
-function ContextLink({ emoji, title, to }: { emoji: string; title: string; to: string }) {
+type CtxLinkProps =
+  | { emoji: string; title: string; to: "/pathway/$context"; params: { context: string } };
+
+function ContextLink({ emoji, title, to, params }: CtxLinkProps) {
   return (
     <Link
       to={to}
+      params={params}
       className="group flex items-center justify-between rounded-2xl border border-border/60 bg-card p-5 shadow-soft transition-colors hover:border-primary/40 hover:bg-accent/40"
     >
       <span className="flex items-center gap-3">
@@ -156,6 +142,17 @@ function ContextLink({ emoji, title, to }: { emoji: string; title: string; to: s
         <span className="font-medium">{title}</span>
       </span>
       <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+    </Link>
+  );
+}
+
+function ToolCard({ to, icon, title, text }: { to: string; icon: React.ReactNode; title: string; text: string }) {
+  return (
+    <Link to={to} className="group rounded-3xl border border-border/60 bg-card p-6 shadow-soft transition-all hover:-translate-y-1 hover:border-primary/40">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-calm text-primary">{icon}</div>
+      <h3 className="mt-4 text-lg">{title}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+      <div className="mt-4 flex items-center text-sm text-primary">Open <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" /></div>
     </Link>
   );
 }
