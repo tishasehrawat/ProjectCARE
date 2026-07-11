@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { LanguageProvider } from "@/lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -72,16 +73,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Calm Navigator is a hospital app that reduces patient and family fear and uncertainty." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Calm Navigator is a hospital app that reduces patient and family fear and uncertainty." },
+      { title: "Project CARE — Calm, clarity & comfort in hospital moments" },
+      { name: "description", content: "Project CARE is a gentle in-hospital companion that helps patients and families navigate fear, uncertainty, and waiting." },
+      { name: "author", content: "Project CARE" },
+      { property: "og:title", content: "Project CARE — Calm, clarity & comfort in hospital moments" },
+      { property: "og:description", content: "A gentle in-hospital companion for patients and families." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Calm Navigator is a hospital app that reduces patient and family fear and uncertainty." },
+      { name: "twitter:title", content: "Project CARE" },
+      { name: "twitter:description", content: "A gentle in-hospital companion for patients and families." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8c1a8404-3927-4c10-b4c8-77f0ca1b000f/id-preview-9d8ce119--057f52ed-7f79-402f-8046-ed3b09672b8c.lovable.app-1778417119673.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8c1a8404-3927-4c10-b4c8-77f0ca1b000f/id-preview-9d8ce119--057f52ed-7f79-402f-8046-ed3b09672b8c.lovable.app-1778417119673.png" },
     ],
@@ -120,7 +120,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <LanguageProvider>
+        <Outlet />
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

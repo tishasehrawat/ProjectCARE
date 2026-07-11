@@ -1,31 +1,83 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AppFooter, AppHeader } from "@/components/AppHeader";
+import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { Button } from "@/components/ui/button";
 import { Pause, Play, RotateCcw } from "lucide-react";
 
 export const Route = createFileRoute("/comfort")({
   head: () => ({
     meta: [
-      { title: "Create comfort · CARE" },
-      { name: "description", content: "Guided breathing and grounding exercises for difficult hospital moments." },
+      { title: "Comfort hub · Project CARE" },
+      { name: "description", content: "Guided breathing library and grounding exercises for hospital stress." },
     ],
   }),
   component: Comfort,
 });
 
-const PHASES = [
-  { label: "Breathe in", seconds: 4, scale: 1.15 },
-  { label: "Hold", seconds: 4, scale: 1.15 },
-  { label: "Breathe out", seconds: 6, scale: 0.85 },
-  { label: "Rest", seconds: 2, scale: 0.85 },
+type Phase = { label: string; seconds: number; scale: number };
+type Pattern = { id: string; name: string; description: string; phases: Phase[] };
+
+const PATTERNS: Pattern[] = [
+  {
+    id: "calm",
+    name: "Calm breath (4·4·6·2)",
+    description: "Longer exhale to soothe the nervous system.",
+    phases: [
+      { label: "Breathe in", seconds: 4, scale: 1.15 },
+      { label: "Hold", seconds: 4, scale: 1.15 },
+      { label: "Breathe out", seconds: 6, scale: 0.85 },
+      { label: "Rest", seconds: 2, scale: 0.85 },
+    ],
+  },
+  {
+    id: "box",
+    name: "Box breathing (4·4·4·4)",
+    description: "Used by clinicians and athletes to steady focus.",
+    phases: [
+      { label: "Breathe in", seconds: 4, scale: 1.15 },
+      { label: "Hold", seconds: 4, scale: 1.15 },
+      { label: "Breathe out", seconds: 4, scale: 0.85 },
+      { label: "Hold", seconds: 4, scale: 0.85 },
+    ],
+  },
+  {
+    id: "478",
+    name: "4·7·8 breathing",
+    description: "Helpful before sleep or when panic rises.",
+    phases: [
+      { label: "Breathe in", seconds: 4, scale: 1.15 },
+      { label: "Hold", seconds: 7, scale: 1.15 },
+      { label: "Breathe out", seconds: 8, scale: 0.85 },
+    ],
+  },
+  {
+    id: "paced",
+    name: "Paced (5·5)",
+    description: "Simple in-and-out rhythm. Good for beginners.",
+    phases: [
+      { label: "Breathe in", seconds: 5, scale: 1.15 },
+      { label: "Breathe out", seconds: 5, scale: 0.85 },
+    ],
+  },
 ];
 
 function Comfort() {
+  const [patternId, setPatternId] = useState<string>("calm");
+  const pattern = useMemo(() => PATTERNS.find(p => p.id === patternId)!, [patternId]);
   const [running, setRunning] = useState(false);
   const [phase, setPhase] = useState(0);
-  const [count, setCount] = useState(PHASES[0].seconds);
+  const [count, setCount] = useState(pattern.phases[0].seconds);
   const [cycles, setCycles] = useState(0);
+  const cycleRef = useRef(cycles);
+  cycleRef.current = cycles;
+
+  useEffect(() => {
+    setPhase(0);
+    setCount(pattern.phases[0].seconds);
+    setCycles(0);
+    setRunning(false);
+  }, [patternId, pattern]);
 
   useEffect(() => {
     if (!running) return;
@@ -33,7 +85,7 @@ function Comfort() {
       setCount((c) => {
         if (c > 1) return c - 1;
         setPhase((p) => {
-          const next = (p + 1) % PHASES.length;
+          const next = (p + 1) % pattern.phases.length;
           if (next === 0) setCycles((x) => x + 1);
           return next;
         });
@@ -41,13 +93,14 @@ function Comfort() {
       });
     }, 1000);
     return () => clearInterval(t);
-  }, [running]);
+  }, [running, pattern]);
 
   useEffect(() => {
-    setCount(PHASES[phase].seconds);
-  }, [phase]);
+    setCount(pattern.phases[phase].seconds);
+  }, [phase, pattern]);
 
-  const reset = () => { setRunning(false); setPhase(0); setCount(PHASES[0].seconds); setCycles(0); };
+  const reset = () => { setRunning(false); setPhase(0); setCount(pattern.phases[0].seconds); setCycles(0); };
+  const current = pattern.phases[phase];
 
   return (
     <div className="min-h-screen">
@@ -56,23 +109,43 @@ function Comfort() {
         <p className="text-sm uppercase tracking-[0.2em] text-primary">Step 03 · Create comfort</p>
         <h1 className="mt-3 text-3xl md:text-4xl">A breath at a time.</h1>
         <p className="mt-3 text-muted-foreground">
-          Follow the circle. Inhale as it grows, exhale as it softens. Two minutes can shift a lot.
+          Choose a rhythm below. Follow the circle — inhale as it grows, exhale as it softens.
         </p>
+        <DisclaimerBanner />
 
-        <div className="mt-10 flex flex-col items-center gap-8 rounded-3xl bg-gradient-calm p-10 shadow-soft">
+        {/* Pattern picker */}
+        <div className="mt-8 flex flex-wrap gap-2">
+          {PATTERNS.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setPatternId(p.id)}
+              className={`rounded-full border px-4 py-2 text-sm transition-colors ${
+                p.id === patternId
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card hover:border-primary/40"
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">{pattern.description}</p>
+
+        {/* Breathing */}
+        <div className="mt-8 flex flex-col items-center gap-8 rounded-3xl bg-gradient-calm p-10 shadow-soft">
           <div className="relative flex h-72 w-72 items-center justify-center">
             <div
               className="absolute inset-0 rounded-full bg-background/50 transition-transform ease-in-out"
               style={{
-                transform: `scale(${PHASES[phase].scale})`,
-                transitionDuration: `${PHASES[phase].seconds}s`,
+                transform: `scale(${current.scale})`,
+                transitionDuration: `${current.seconds}s`,
               }}
             />
             <div className="absolute inset-8 rounded-full border border-primary/20" />
             <div className="relative text-center">
               <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{running ? "in session" : "ready"}</div>
-              <div className="mt-1 font-display text-3xl">{PHASES[phase].label}</div>
-              <div className="mt-1 text-5xl font-display text-primary">{count}</div>
+              <div className="mt-1 font-display text-3xl">{current.label}</div>
+              <div className="mt-1 font-display text-5xl text-primary">{count}</div>
             </div>
           </div>
 
@@ -87,9 +160,9 @@ function Comfort() {
           <p className="text-xs text-muted-foreground">Cycles completed: {cycles}</p>
         </div>
 
-        {/* Grounding */}
+        {/* Grounding — 5·4·3·2·1 */}
         <section className="mt-10 rounded-3xl border border-border/60 bg-card p-7 shadow-soft">
-          <h2 className="text-xl">5 · 4 · 3 · 2 · 1 grounding</h2>
+          <h2 className="text-xl">5 · 4 · 3 · 2 · 1 sensory grounding</h2>
           <p className="mt-1 text-sm text-muted-foreground">Bring your attention back to this room, gently.</p>
           <ul className="mt-5 space-y-3 text-sm">
             <Ground n="5" label="things you can see" hint="A chair. A poster. A pair of hands." />
@@ -98,6 +171,19 @@ function Comfort() {
             <Ground n="2" label="things you can smell" hint="Or two scents you remember liking." />
             <Ground n="1" label="thing you are grateful for" hint="Even something small counts." />
           </ul>
+        </section>
+
+        {/* Body scan */}
+        <section className="mt-8 rounded-3xl border border-border/60 bg-card p-7 shadow-soft">
+          <h2 className="text-xl">Quick body scan</h2>
+          <p className="mt-1 text-sm text-muted-foreground">One minute. Move your attention slowly from head to toe.</p>
+          <ol className="mt-5 list-decimal space-y-2 pl-5 text-sm text-foreground/90">
+            <li>Soften your forehead and jaw.</li>
+            <li>Drop your shoulders away from your ears.</li>
+            <li>Unclench your hands, let them rest in your lap.</li>
+            <li>Feel your feet flat on the ground.</li>
+            <li>Take one slow breath and notice what changed.</li>
+          </ol>
         </section>
 
         {/* Reassurance */}

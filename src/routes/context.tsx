@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppFooter, AppHeader } from "@/components/AppHeader";
+import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { CONTEXTS } from "@/lib/care-data";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/context")({
   head: () => ({
     meta: [
-      { title: "Choose your situation · CARE" },
-      { name: "description", content: "Tell us where you are in the hospital journey so we can guide you with the right pathway." },
+      { title: "Choose your situation · Project CARE" },
+      { name: "description", content: "Tell us where you are in the hospital journey and we'll guide you through what usually happens next." },
     ],
   }),
   component: ContextPage,
@@ -17,10 +18,11 @@ function ContextPage() {
   return (
     <div className="min-h-screen">
       <AppHeader />
-      <main className="mx-auto max-w-3xl px-4 py-12">
+      <main className="mx-auto max-w-4xl px-4 py-12">
         <p className="text-sm uppercase tracking-[0.2em] text-primary">Step 02 · Clarify uncertainty</p>
         <h1 className="mt-3 text-3xl md:text-4xl">Where are you right now?</h1>
-        <p className="mt-3 text-muted-foreground">Pick the one that fits closest. We'll show you what usually happens next.</p>
+        <p className="mt-3 text-muted-foreground">Pick the one closest to your moment. We'll show you what usually happens next.</p>
+        <DisclaimerBanner />
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
           {Object.values(CONTEXTS).map((c) => (
