@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NotesRouteImport } from './routes/notes'
+import { Route as JournalRouteImport } from './routes/journal'
 import { Route as ContextRouteImport } from './routes/context'
 import { Route as CommunicateRouteImport } from './routes/communicate'
 import { Route as ComfortRouteImport } from './routes/comfort'
@@ -16,6 +18,16 @@ import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathwayContextRouteImport } from './routes/pathway.$context'
 
+const NotesRoute = NotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContextRoute = ContextRouteImport.update({
   id: '/context',
   path: '/context',
@@ -53,6 +65,8 @@ export interface FileRoutesByFullPath {
   '/comfort': typeof ComfortRoute
   '/communicate': typeof CommunicateRoute
   '/context': typeof ContextRoute
+  '/journal': typeof JournalRoute
+  '/notes': typeof NotesRoute
   '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +75,8 @@ export interface FileRoutesByTo {
   '/comfort': typeof ComfortRoute
   '/communicate': typeof CommunicateRoute
   '/context': typeof ContextRoute
+  '/journal': typeof JournalRoute
+  '/notes': typeof NotesRoute
   '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRoutesById {
@@ -70,6 +86,8 @@ export interface FileRoutesById {
   '/comfort': typeof ComfortRoute
   '/communicate': typeof CommunicateRoute
   '/context': typeof ContextRoute
+  '/journal': typeof JournalRoute
+  '/notes': typeof NotesRoute
   '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +98,8 @@ export interface FileRouteTypes {
     | '/comfort'
     | '/communicate'
     | '/context'
+    | '/journal'
+    | '/notes'
     | '/pathway/$context'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -88,6 +108,8 @@ export interface FileRouteTypes {
     | '/comfort'
     | '/communicate'
     | '/context'
+    | '/journal'
+    | '/notes'
     | '/pathway/$context'
   id:
     | '__root__'
@@ -96,6 +118,8 @@ export interface FileRouteTypes {
     | '/comfort'
     | '/communicate'
     | '/context'
+    | '/journal'
+    | '/notes'
     | '/pathway/$context'
   fileRoutesById: FileRoutesById
 }
@@ -105,11 +129,27 @@ export interface RootRouteChildren {
   ComfortRoute: typeof ComfortRoute
   CommunicateRoute: typeof CommunicateRoute
   ContextRoute: typeof ContextRoute
+  JournalRoute: typeof JournalRoute
+  NotesRoute: typeof NotesRoute
   PathwayContextRoute: typeof PathwayContextRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/notes': {
+      id: '/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof NotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/context': {
       id: '/context'
       path: '/context'
@@ -161,18 +201,10 @@ const rootRouteChildren: RootRouteChildren = {
   ComfortRoute: ComfortRoute,
   CommunicateRoute: CommunicateRoute,
   ContextRoute: ContextRoute,
+  JournalRoute: JournalRoute,
+  NotesRoute: NotesRoute,
   PathwayContextRoute: PathwayContextRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
