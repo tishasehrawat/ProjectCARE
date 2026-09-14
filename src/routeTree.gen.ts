@@ -9,18 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NotesRouteImport } from './routes/notes'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as JournalRouteImport } from './routes/journal'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as GlossaryRouteImport } from './routes/glossary'
+import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContextRouteImport } from './routes/context'
+import { Route as CompanionRouteImport } from './routes/companion'
 import { Route as CommunicateRouteImport } from './routes/communicate'
 import { Route as ComfortRouteImport } from './routes/comfort'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathwayContextRouteImport } from './routes/pathway.$context'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotesRoute = NotesRouteImport.update({
   id: '/notes',
   path: '/notes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JournalRoute = JournalRouteImport.update({
@@ -28,9 +45,34 @@ const JournalRoute = JournalRouteImport.update({
   path: '/journal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossaryRoute = GlossaryRouteImport.update({
+  id: '/glossary',
+  path: '/glossary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContextRoute = ContextRouteImport.update({
   id: '/context',
   path: '/context',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanionRoute = CompanionRouteImport.update({
+  id: '/companion',
+  path: '/companion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunicateRoute = CommunicateRouteImport.update({
@@ -64,9 +106,16 @@ export interface FileRoutesByFullPath {
   '/checkin': typeof CheckinRoute
   '/comfort': typeof ComfortRoute
   '/communicate': typeof CommunicateRoute
+  '/companion': typeof CompanionRoute
   '/context': typeof ContextRoute
+  '/faq': typeof FaqRoute
+  '/feedback': typeof FeedbackRoute
+  '/glossary': typeof GlossaryRoute
+  '/help': typeof HelpRoute
   '/journal': typeof JournalRoute
+  '/learn': typeof LearnRoute
   '/notes': typeof NotesRoute
+  '/settings': typeof SettingsRoute
   '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRoutesByTo {
@@ -74,9 +123,16 @@ export interface FileRoutesByTo {
   '/checkin': typeof CheckinRoute
   '/comfort': typeof ComfortRoute
   '/communicate': typeof CommunicateRoute
+  '/companion': typeof CompanionRoute
   '/context': typeof ContextRoute
+  '/faq': typeof FaqRoute
+  '/feedback': typeof FeedbackRoute
+  '/glossary': typeof GlossaryRoute
+  '/help': typeof HelpRoute
   '/journal': typeof JournalRoute
+  '/learn': typeof LearnRoute
   '/notes': typeof NotesRoute
+  '/settings': typeof SettingsRoute
   '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRoutesById {
@@ -85,9 +141,16 @@ export interface FileRoutesById {
   '/checkin': typeof CheckinRoute
   '/comfort': typeof ComfortRoute
   '/communicate': typeof CommunicateRoute
+  '/companion': typeof CompanionRoute
   '/context': typeof ContextRoute
+  '/faq': typeof FaqRoute
+  '/feedback': typeof FeedbackRoute
+  '/glossary': typeof GlossaryRoute
+  '/help': typeof HelpRoute
   '/journal': typeof JournalRoute
+  '/learn': typeof LearnRoute
   '/notes': typeof NotesRoute
+  '/settings': typeof SettingsRoute
   '/pathway/$context': typeof PathwayContextRoute
 }
 export interface FileRouteTypes {
@@ -97,9 +160,16 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/comfort'
     | '/communicate'
+    | '/companion'
     | '/context'
+    | '/faq'
+    | '/feedback'
+    | '/glossary'
+    | '/help'
     | '/journal'
+    | '/learn'
     | '/notes'
+    | '/settings'
     | '/pathway/$context'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -107,9 +177,16 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/comfort'
     | '/communicate'
+    | '/companion'
     | '/context'
+    | '/faq'
+    | '/feedback'
+    | '/glossary'
+    | '/help'
     | '/journal'
+    | '/learn'
     | '/notes'
+    | '/settings'
     | '/pathway/$context'
   id:
     | '__root__'
@@ -117,9 +194,16 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/comfort'
     | '/communicate'
+    | '/companion'
     | '/context'
+    | '/faq'
+    | '/feedback'
+    | '/glossary'
+    | '/help'
     | '/journal'
+    | '/learn'
     | '/notes'
+    | '/settings'
     | '/pathway/$context'
   fileRoutesById: FileRoutesById
 }
@@ -128,19 +212,40 @@ export interface RootRouteChildren {
   CheckinRoute: typeof CheckinRoute
   ComfortRoute: typeof ComfortRoute
   CommunicateRoute: typeof CommunicateRoute
+  CompanionRoute: typeof CompanionRoute
   ContextRoute: typeof ContextRoute
+  FaqRoute: typeof FaqRoute
+  FeedbackRoute: typeof FeedbackRoute
+  GlossaryRoute: typeof GlossaryRoute
+  HelpRoute: typeof HelpRoute
   JournalRoute: typeof JournalRoute
+  LearnRoute: typeof LearnRoute
   NotesRoute: typeof NotesRoute
+  SettingsRoute: typeof SettingsRoute
   PathwayContextRoute: typeof PathwayContextRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notes': {
       id: '/notes'
       path: '/notes'
       fullPath: '/notes'
       preLoaderRoute: typeof NotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/journal': {
@@ -150,11 +255,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JournalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossary': {
+      id: '/glossary'
+      path: '/glossary'
+      fullPath: '/glossary'
+      preLoaderRoute: typeof GlossaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/context': {
       id: '/context'
       path: '/context'
       fullPath: '/context'
       preLoaderRoute: typeof ContextRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/companion': {
+      id: '/companion'
+      path: '/companion'
+      fullPath: '/companion'
+      preLoaderRoute: typeof CompanionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/communicate': {
@@ -200,11 +340,28 @@ const rootRouteChildren: RootRouteChildren = {
   CheckinRoute: CheckinRoute,
   ComfortRoute: ComfortRoute,
   CommunicateRoute: CommunicateRoute,
+  CompanionRoute: CompanionRoute,
   ContextRoute: ContextRoute,
+  FaqRoute: FaqRoute,
+  FeedbackRoute: FeedbackRoute,
+  GlossaryRoute: GlossaryRoute,
+  HelpRoute: HelpRoute,
   JournalRoute: JournalRoute,
+  LearnRoute: LearnRoute,
   NotesRoute: NotesRoute,
+  SettingsRoute: SettingsRoute,
   PathwayContextRoute: PathwayContextRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
